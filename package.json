@@ -1,0 +1,25 @@
+{
+  "name": "programacionbackend",
+  "version": "1.0.0",
+  "description": "Proyecto para el curso de Programacion Backend",
+  "main": "ProductManager.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Cellazelf12/Programacion-Backend.git"
+  },
+  "author": "Luciano Emanuel Muñoz",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Cellazelf12/Programacion-Backend/issues"
+  },
+  "homepage": "https://github.com/Cellazelf12/Programacion-Backend#readme",
+  "dependencies": {
+    "fs": "^0.0.1-security"
+  },
+  "devDependencies": {
+    "jest": "^29.5.0"
+  }
+}

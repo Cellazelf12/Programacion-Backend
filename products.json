@@ -1,0 +1,11 @@
+[
+  {
+    "id": 0,
+    "title": "Auriculares",
+    "description": "Auriculares con microfono",
+    "price": 40000,
+    "thumbnail": "sin img",
+    "code": "abc123",
+    "stock": 25
+  }
+]

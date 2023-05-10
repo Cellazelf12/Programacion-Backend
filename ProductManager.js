@@ -1,54 +1,150 @@
-class ProductManager {
-    constructor() {
-        this.products = [];
-        this.currentId = 1;
+const fs = require('fs');
+
+function checkForDuplicates(product, products) {
+    if (products.some(p => p.code === product.code)) {
+        throw new Error('Product with same code already exists');
     }
 
-    addProduct(product) {
-        // Verifica que todos los campos requeridos estén presentes
-        if (!product.title || !product.price || !product.code || !product.thumbnail || !product.stock) {
-            throw new Error('Todos los campos son requeridos');
-        }
-
-        // Verifica que el código del producto no se repita
-        if (this.getProductById(product.code)) {
-            throw new Error('El código del producto ya existe');
-        }
-
-        // Agrega el producto al arreglo de productos
-        const newProduct = {
-            id: this.currentId++,
-            ...product
-        };
-        
-        this.products.push(newProduct);
-        return newProduct;
-    }
-
-    getProductById(code) {
-        return this.products.find(product => product.code === code || console.log("Not found"));
-    }
-
-    getProducts() {
-        return this.products;
+    if (product.id && products.some(p => p.id === product.id)) {
+        throw new Error('Product with same id already exists');
     }
 }
 
-const manager = new ProductManager();
+function validateProduct(product) {
+    const requiredFields = ['title', 'price', 'code', 'thumbnail', 'stock'];
 
-console.log(manager.getProducts());
+    if (!requiredFields.every(field => product[field])) {
+        throw new Error('All fields are required');
+    }
 
-const product = {
-    title: "producto prueba",
-    description: "Este es un producto prueba",
-    price: 200,
-    thumbnail: "Sin imagen",
-    code: "abc123",
-    stock: 25
-};
+    if (typeof product.price !== 'number' || product.price <= 0) {
+        throw new Error('Price must be a positive number');
+    }
 
-manager.addProduct(product);
+    if (typeof product.stock !== 'number' || product.stock < 0) {
+        throw new Error('Stock must be a positive number or zero');
+    }
+}
 
-console.log(manager.getProducts());
+class ProductManager {
+    constructor(path) {
+        if (!path || path === "") {
+            throw new Error(
+                'Debe ingresar una ruta válida para leer el archivo "products.txt"'
+            );
+        }
+        if (!fs.existsSync(path)) {
+            throw new Error(`No existe el archivo en el path: ${path}`);
+        }
+        this.path = path;
+        this.products = [];
+        this.loadProducts();
+    }
 
-manager.addProduct(product);
+    async getFile() {
+        try {
+            const data = await fs.promises.readFile(this.path, "utf-8");
+            const products = JSON.parse(data);
+            return products;
+        } catch (error) {
+            console.error('Error al leer el archivo:', error);
+        }
+    };
+
+    async addProduct(product) {
+        validateProduct(product);
+
+        checkForDuplicates(product, this.products);
+
+        const newProduct = {
+            id: this.generateId(),
+            ...product
+        };
+
+        this.products.push(newProduct);
+        try {
+            await this.saveProducts();
+        } catch (error) {
+            throw new Error('Error while saving product');
+        }
+        return newProduct;
+    }
+
+    getProductByCode(code) {
+        const product = this.products.find(product => product.code === code);
+        if (!product) {
+            throw new Error('Product not found');
+        }
+        return product;
+    }
+
+    getProductById(id) {
+        const product = this.products.find((product) => product.id === id);
+        if (!product) {
+            throw new Error('Product not found');
+        }
+        return product;
+    }
+
+    async getProducts() {
+        const products = await this.getFile();
+
+        return products;
+    }
+
+    async loadProducts() {
+        try {
+            const data = await fs.promises.readFile(this.path, 'utf8');
+            this.products = JSON.parse(data);
+        } catch (error) {
+            console.error('Error al cargar los productos:', error);
+        }
+    }
+
+    generateId() {
+        if (this.products.length === 0) {
+            return 0;
+        }
+        const lastProduct = this.products[this.products.length - 1];
+        return lastProduct.id + 1;
+    }
+
+    async deleteProduct(id) {
+        const index = this.products.findIndex(product => product.id === id);
+
+        if (index !== -1) {
+            this.products.splice(index, 1);
+            try {
+                await this.saveProducts();
+            } catch (error) {
+                throw new Error('Error while saving product');
+            }
+        }
+    }
+
+    async updateProduct(id, toUpdate) {
+        const product = this.getProductById(id);
+
+        Object.assign(product, toUpdate);
+        try {
+            await this.saveProducts();
+        } catch (error) {
+            throw new Error('Error while saving product');
+        }
+
+        return product;
+    }
+
+    async saveProducts() {
+        try {
+            const data = JSON.stringify(this.products, null, 2);
+            await fs.promises.writeFile(this.path, data, 'utf8');
+        } catch (error) {
+            console.error('Error al guardar los productos:', error);
+        }
+    }
+}
+
+module.exports = ProductManager;
+
+module.exports = ProductManager;
