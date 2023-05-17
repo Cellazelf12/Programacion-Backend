@@ -179,7 +179,7 @@ app.get('/products/:pid', (req, res) => {
     let product;
     try {
         product = pM.getProductById(id);
-    } catch (Error) {
+    } catch {
         res.status(404).json({ error: `El producto con la id ${id} no existe.` });
     } finally {
         res.send(product);
