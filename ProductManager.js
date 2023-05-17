@@ -165,7 +165,7 @@ app.get('/products', (req, res) => {
             const limit = parseInt(req.query.limit);
 
             if (limit && !Number.isInteger(limit)) {
-                res.status(400).json({ error: 'El parámetro limit debe ser un número entero.' });
+                res.status(400).json({ error: 'El parámetro limit debe ser un numero mayor a 0 y debe ser un entero.' });
                 return;
             }
 
