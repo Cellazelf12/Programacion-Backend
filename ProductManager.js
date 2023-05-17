@@ -1,4 +1,5 @@
 const fs = require('fs');
+const express = require('express');
 
 function checkForDuplicates(product, products) {
     if (products.some(p => p.code === product.code)) {
@@ -145,6 +146,47 @@ class ProductManager {
     }
 }
 
+function getLimitedArray(array, count) {
+    return array.slice(0, count);
+}
+
 module.exports = ProductManager;
 
 module.exports = ProductManager;
+
+const app = express();
+
+const pM = new ProductManager("./products.json");
+
+app.get('/products', (req, res) => {
+
+    pM.getProducts()
+        .then((products) => {
+            const limit = parseInt(req.query.limit);
+
+            if (limit && !Number.isInteger(limit)) {
+                res.status(400).json({ error: 'El parámetro limit debe ser un número entero.' });
+                return;
+            }
+
+            res.send((limit > 0 ? getLimitedArray(products, limit) : products));
+        })
+});
+
+app.get('/products/:pid', (req, res) => {
+    const id = parseInt(req.params.pid);
+
+    let product;
+    try {
+        product = pM.getProductById(id);
+    } catch (Error) {
+        res.status(404).json({ error: `El producto con la id ${id} no existe.` });
+    } finally {
+        res.send(product);
+    }
+});
+
+
+app.listen(8080, () => {
+    console.log('Servidor iniciado en el puerto 8080');
+});

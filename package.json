@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/Cellazelf12/Programacion-Backend#readme",
   "dependencies": {
+    "express": "^4.18.2",
     "fs": "^0.0.1-security"
   },
   "devDependencies": {
