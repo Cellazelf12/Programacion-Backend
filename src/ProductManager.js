@@ -13,7 +13,7 @@ function checkForDuplicates(product, products) {
 function validateProduct(product) {
     const requiredFields = ['title', 'price', 'code', 'thumbnail', 'stock'];
 
-    if (!requiredFields.every(field => product[field])) {
+    if (requiredFields.some(field => !Object.keys(product).includes(field))) {
         throw new Error('All fields are required');
     }
 
@@ -30,7 +30,7 @@ class ProductManager {
     constructor(path) {
         if (!path || path === "") {
             throw new Error(
-                'Debe ingresar una ruta válida para leer el archivo "products.txt"'
+                'Debe ingresar una ruta válida para leer el archivo'
             );
         }
         if (!fs.existsSync(path)) {
@@ -47,7 +47,7 @@ class ProductManager {
             const products = JSON.parse(data);
             return products;
         } catch (error) {
-            console.error('Error al leer el archivo:', error);
+            console.error('Error while reading products', error);
         }
     };
 
@@ -97,7 +97,7 @@ class ProductManager {
             const data = await fs.promises.readFile(this.path, 'utf8');
             this.products = JSON.parse(data);
         } catch (error) {
-            console.error('Error al cargar los productos:', error);
+            console.error('Error while loading products:', error);
         }
     }
 
@@ -119,6 +119,8 @@ class ProductManager {
             } catch (error) {
                 throw new Error('Error while saving product');
             }
+        } else {
+            throw new Error('Product not found');
         }
     }
 
@@ -140,7 +142,8 @@ class ProductManager {
             const data = JSON.stringify(this.products, null, 2);
             await fs.promises.writeFile(this.path, data, 'utf8');
         } catch (error) {
-            console.error('Error al guardar los productos:', error);
+            console.error('Error while saving products:', error);
+            throw new Error('Error while saving products');
         }
     }
 }

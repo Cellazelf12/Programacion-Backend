@@ -4,8 +4,13 @@
     "title": "Auriculares con micrófono",
     "description": "Auriculares con micrófono integrado para llamadas y música",
     "price": 40000,
-    "thumbnail": "https://via.placeholder.com/150",
+    "thumbnails": [
+      "https://via.placeholder.com/150",
+      "https://via.placeholder.com/150"
+    ],
     "code": "AUR-001",
+    "category": "Perifericos",
+    "status": true,
     "stock": 25
   },
   {
@@ -13,8 +18,13 @@
     "title": "Teclado inalámbrico",
     "description": "Teclado inalámbrico para computadoras y dispositivos móviles",
     "price": 60000,
-    "thumbnail": "https://via.placeholder.com/150",
+    "thumbnails": [
+      "https://via.placeholder.com/150",
+      "https://via.placeholder.com/150"
+    ],
     "code": "TEC-001",
+    "category": "Perifericos",
+    "status": true,
     "stock": 10
   },
   {
@@ -22,8 +32,13 @@
     "title": "Mouse óptico",
     "description": "Mouse óptico con cable para computadoras",
     "price": 25000,
-    "thumbnail": "https://via.placeholder.com/150",
+    "thumbnails": [
+      "https://via.placeholder.com/150",
+      "https://via.placeholder.com/150"
+    ],
     "code": "MOU-001",
+    "status": true,
+    "category": "Perifericos",
     "stock": 50
   },
   {
@@ -31,8 +46,13 @@
     "title": "Monitor LED",
     "description": "Monitor LED Full HD de 24 pulgadas para computadoras",
     "price": 350000,
-    "thumbnail": "https://via.placeholder.com/150",
+    "thumbnails": [
+      "https://via.placeholder.com/150",
+      "https://via.placeholder.com/150"
+    ],
     "code": "MON-001",
+    "status": true,
+    "category": "Pantallas",
     "stock": 5
   },
   {
@@ -40,8 +60,13 @@
     "title": "Impresora láser",
     "description": "Impresora láser monocromática para documentos en blanco y negro",
     "price": 120000,
-    "thumbnail": "https://via.placeholder.com/150",
+    "thumbnails": [
+      "https://via.placeholder.com/150",
+      "https://via.placeholder.com/150"
+    ],
     "code": "IMP-001",
+    "status": true,
+    "category": "Oficina",
     "stock": 8
   },
   {
@@ -49,8 +74,12 @@
     "title": "Disco duro externo",
     "description": "Disco duro externo de 1TB para almacenamiento de datos",
     "price": 80000,
-    "thumbnail": "https://via.placeholder.com/150",
+    "thumbnails": [
+      "https://via.placeholder.com/150",
+      "https://via.placeholder.com/150"
+    ],
     "code": "DIS-001",
+    "category": "Almacenamiento",
     "stock": 15
   },
   {
@@ -58,8 +87,13 @@
     "title": "Smartwatch",
     "description": "Reloj inteligente con monitor de actividad y notificaciones",
     "price": 150000,
-    "thumbnail": "https://via.placeholder.com/150",
+    "thumbnails": [
+      "https://via.placeholder.com/150",
+      "https://via.placeholder.com/150"
+    ],
     "code": "SMA-001",
+    "status": true,
+    "category": "Smartwatchs",
     "stock": 3
   },
   {
@@ -67,8 +101,13 @@
     "title": "Cámara de seguridad",
     "description": "Cámara de seguridad para interiores con visión nocturna",
     "price": 90000,
-    "thumbnail": "https://via.placeholder.com/150",
+    "thumbnails": [
+      "https://via.placeholder.com/150",
+      "https://via.placeholder.com/150"
+    ],
     "code": "CAM-001",
+    "status": true,
+    "category": "Seguridad",
     "stock": 12
   },
   {
@@ -76,8 +115,13 @@
     "title": "Altavoz Bluetooth",
     "description": "Altavoz Bluetooth portátil con micrófono integrado",
     "price": 55000,
-    "thumbnail": "https://via.placeholder.com/150",
+    "thumbnails": [
+      "https://via.placeholder.com/150",
+      "https://via.placeholder.com/150"
+    ],
     "code": "ALT-001",
+    "status": true,
+    "category": "Audio",
     "stock": 20
   },
   {
@@ -85,8 +129,13 @@
     "title": "Tablet Android",
     "description": "Tablet Android de 10 pulgadas con procesador de cuatro núcleos",
     "price": 200000,
-    "thumbnail": "https://via.placeholder.com/150",
+    "thumbnails": [
+      "https://via.placeholder.com/150",
+      "https://via.placeholder.com/150"
+    ],
     "code": "TAB-001",
+    "category": "Tablets",
+    "status": true,
     "stock": 6
   }
 ]
