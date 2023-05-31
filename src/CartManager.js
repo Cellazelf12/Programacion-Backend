@@ -1,4 +1,6 @@
-const fs = require('fs');
+import { existsSync, promises } from 'fs';
+import __dirname from './utils.js';
+import { pM } from './Server.js';
 
 class CartManager {
     constructor(path) {
@@ -7,7 +9,7 @@ class CartManager {
                 'Debe ingresar una ruta válida para leer el archivo'
             );
         }
-        if (!fs.existsSync(path)) {
+        if (!existsSync(path)) {
             throw new Error(`No existe el archivo en el path: ${path}`);
         }
         this.path = path;
@@ -17,7 +19,7 @@ class CartManager {
 
     async getFile() {
         try {
-            const data = await fs.promises.readFile(this.path, "utf-8");
+            const data = await promises.readFile(this.path, "utf-8");
             const carts = JSON.parse(data);
             return carts;
         } catch (error) {
@@ -30,10 +32,13 @@ class CartManager {
 
         carts.push({ id: this.generateId(), products: [] });
 
-        return await fs.promises.writeFile(this.path, JSON.stringify(carts, null, "\t"));
+        return await promises.writeFile(this.path, JSON.stringify(carts, null, "\t"));
     }
 
     async addProduct(cartId, productId) {
+        const product = pM.getProductById(productId);
+
+        if (!product) { return; }
 
         const cart = await this.getCartById(cartId);
 
@@ -56,7 +61,7 @@ class CartManager {
 
             carts[cartIndex] = cart
 
-            await fs.promises.writeFile(this.path, JSON.stringify(carts, null, "\t"))
+            await promises.writeFile(this.path, JSON.stringify(carts, null, "\t"))
         } catch (error) {
             throw new Error("Error while adding product to cart.", error);
         }
@@ -84,7 +89,7 @@ class CartManager {
 
     async loadCarts() {
         try {
-            const data = await fs.promises.readFile(this.path, 'utf-8');
+            const data = await promises.readFile(this.path, 'utf-8');
             this.carts = JSON.parse(data);
         } catch (error) {
             console.error('Error while loading carts:', error);
@@ -114,11 +119,11 @@ class CartManager {
 
             carts[cartIndex] = cart
 
-            await fs.promises.writeFile(this.path, JSON.stringify(carts, null, "\t"))
+            await promises.writeFile(this.path, JSON.stringify(carts, null, "\t"))
         } else {
             throw new Error('Product not found');
         }
     }
 }
 
-module.exports = CartManager;
+export default CartManager;

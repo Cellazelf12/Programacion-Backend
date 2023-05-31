@@ -1,4 +1,4 @@
-const fs = require('fs');
+import { existsSync, promises } from 'fs';
 
 function checkForDuplicates(product, products) {
     if (products.some(p => p.code === product.code)) {
@@ -33,7 +33,7 @@ class ProductManager {
                 'Debe ingresar una ruta válida para leer el archivo'
             );
         }
-        if (!fs.existsSync(path)) {
+        if (!existsSync(path)) {
             throw new Error(`No existe el archivo en el path: ${path}`);
         }
         this.path = path;
@@ -43,7 +43,7 @@ class ProductManager {
 
     async getFile() {
         try {
-            const data = await fs.promises.readFile(this.path, "utf-8");
+            const data = await promises.readFile(this.path, "utf-8");
             const products = JSON.parse(data);
             return products;
         } catch (error) {
@@ -62,11 +62,13 @@ class ProductManager {
         };
 
         this.products.push(newProduct);
+
         try {
             await this.saveProducts();
         } catch (error) {
             throw new Error('Error while saving product');
         }
+
         return newProduct;
     }
 
@@ -80,6 +82,7 @@ class ProductManager {
 
     getProductById(id) {
         const product = this.products.find((product) => product.id === id);
+
         if (!product) {
             throw new Error('Product not found');
         }
@@ -92,9 +95,19 @@ class ProductManager {
         return products;
     }
 
+    async getProductsInStock() {
+        const products = await this.getFile();
+
+        const inStock = [];
+
+        inStock.push(...products.filter(product => product.stock > 0));
+
+        return inStock;
+    }
+
     async loadProducts() {
         try {
-            const data = await fs.promises.readFile(this.path, 'utf8');
+            const data = await promises.readFile(this.path, 'utf8');
             this.products = JSON.parse(data);
         } catch (error) {
             console.error('Error while loading products:', error);
@@ -140,7 +153,8 @@ class ProductManager {
     async saveProducts() {
         try {
             const data = JSON.stringify(this.products, null, 2);
-            await fs.promises.writeFile(this.path, data, 'utf8');
+            await promises.writeFile(this.path, data, 'utf8');
+
         } catch (error) {
             console.error('Error while saving products:', error);
             throw new Error('Error while saving products');
@@ -148,6 +162,4 @@ class ProductManager {
     }
 }
 
-module.exports = ProductManager;
-
-module.exports = ProductManager;
+export default ProductManager;

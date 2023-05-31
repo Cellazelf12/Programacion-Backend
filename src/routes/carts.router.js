@@ -1,9 +1,9 @@
-const { Router } = require("express");
-const CartManager = require("../CartManager.js");
+import { Router } from "express";
+import CartManager from "../CartManager.js";
 
 const router = Router();
-
-const cM = new CartManager("src/files/carts.json");
+import __dirName from "../utils.js";
+const cM = new CartManager(__dirName + "/files/carts.json");
 
 function getLimitedArray(array, count) {
     return array.slice(0, count);
@@ -73,5 +73,5 @@ router.delete("/:cid/products/:pid", async (req, res) => {
     }
 });
 
-module.exports = router;
+export default router;
 

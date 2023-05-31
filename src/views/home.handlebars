@@ -1,0 +1,24 @@
+<div class="container">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Descripción</th>
+        <th>Precio</th>
+        <th>Categoría</th>
+        <th>Unidades Disponibles</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each products}}
+        <tr>
+          <td>{{title}}</td>
+          <td>{{description}}</td>
+          <td>${{price}}</td>
+          <td>{{category}}</td>
+          <td>{{stock}} unidades</td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+</div>

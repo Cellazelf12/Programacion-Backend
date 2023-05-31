@@ -137,5 +137,15 @@
     "category": "Tablets",
     "status": true,
     "stock": 6
+  },
+  {
+    "id": 11,
+    "title": "PC Gamer",
+    "description": "PC Gamer de entrada con procesador de cuatro núcleos, 8gb de RAM, 1TB en SSD",
+    "price": 300000,
+    "thumbnail": "https://via.placeholder.com/100",
+    "code": "PCG-002",
+    "category": "Computadoras",
+    "stock": 20
   }
 ]
