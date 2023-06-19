@@ -1,6 +1,5 @@
 import { Router } from "express";
 const router = Router();
-import socketServer, { pM } from "../Server.js";
 
 function getLimitedArray(array, count) {
     return array.slice(0, count);
@@ -10,7 +9,7 @@ router.get('/:pid', (req, res) => {
     const id = parseInt(req.params.pid);
 
     try {
-        const product = pM.getProductById(id);
+        const product = req.pM.getProductById(id);
 
         if (product) {
 
@@ -24,7 +23,7 @@ router.get('/:pid', (req, res) => {
 
 router.get('/', async (req, res) => {
 
-    await pM.getProducts()
+    await req.pM.getProducts()
         .then((products) => {
             const limit = parseInt(req.query.limit);
 
@@ -41,8 +40,8 @@ router.post("/", async (req, res) => {
     const product = req.body;
 
     try {
-        const newProduct = await pM.addProduct(product);
-        socketServer.emit('newProduct', newProduct);
+        const newProduct = await req.pM.addProduct(product);
+        req.socketServer.emit('newProduct', newProduct);
         res.status(201).send('Product created successfully');
     } catch (err) {
         res.status(400).send(err.message);
@@ -54,8 +53,8 @@ router.put("/:pid", async (req, res) => {
     const id = parseInt(req.params.pid);
 
     try {
-        const product = await pM.updateProduct(id, fields);
-        socketServer.emit("updateProduct", product);
+        const product = await req.pM.updateProduct(id, fields);
+        req.socketServer.emit("updateProduct", product);
         res.status(201).send('Product updated successfully');
     } catch (err) {
         res.status(400).send(err.message);
@@ -66,8 +65,8 @@ router.delete("/:pid", async (req, res) => {
     const id = parseInt(req.params.pid);
 
     try {
-        await pM.deleteProduct(id);
-        socketServer.emit("deleteProduct", id);
+        await req.pM.deleteProduct(id);
+        req.socketServer.emit("deleteProduct", id);
         res.status(201).send('Product deleted successfully');
     } catch (err) {
         res.status(400).send(err.message);

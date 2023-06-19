@@ -1,9 +1,9 @@
 import { Router } from "express";
-import CartManager from "../CartManager.js";
+import CartManager from "../DAOs/classes/mongo/CartManagerMongo.class.js";
 
 const router = Router();
 import __dirName from "../utils.js";
-const cM = new CartManager(__dirName + "/files/carts.json");
+const cM = new CartManager();
 
 function getLimitedArray(array, count) {
     return array.slice(0, count);

@@ -1,6 +1,6 @@
 import { existsSync, promises } from 'fs';
-import __dirname from './utils.js';
-import { pM } from './Server.js';
+import __dirname from '../../utils.js';
+import { pM } from '../../Server.js';
 
 class CartManager {
     constructor(path) {

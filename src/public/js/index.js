@@ -37,7 +37,7 @@ function updateProducts(products) {
 }
 
 socket.on('connect', () => {
-  console.log('Conectado al servidor de socket.io');
+  console.log('Cliente conectado al servidor de socket.io');
 });
 
 socket.on("newProduct", (product) => {
