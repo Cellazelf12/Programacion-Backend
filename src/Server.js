@@ -11,6 +11,8 @@ import { Server } from "socket.io";
 
 const app = express();
 
+let pM = new ProductManager();
+
 app.use(express.static(__dirname + '/public'));
 app.use(json());
 app.use(urlencoded({ extended: true }))
@@ -38,23 +40,6 @@ const products = await pM.getProductsInStock();
 
 socketServer.on("connection", async socket => {
     socketServer.emit('initProduct', products);
-
-    let productManager = new ProductManager()
-
-    // Se envian todos los productos al conectarse
-    socket.emit("update-products", await productManager.getProducts())
-
-    // Se agrega el producto y se vuelven a renderizar para todos los sockets conectados
-    socket.on("add-product", async (productData) => {
-        await productManager.addProduct(productData)
-        socketServer.emit("update-products", await productManager.getProducts())
-    })
-
-    // Se elimina el producto y se vuelven a renderizar para todos los sockets conectados
-    socket.on("delete-product", async (productID) => {
-        await productManager.deleteProduct(productID)
-        socketServer.emit("update-products", await productManager.getProducts())
-    })
 });
 
 export default socketServer;

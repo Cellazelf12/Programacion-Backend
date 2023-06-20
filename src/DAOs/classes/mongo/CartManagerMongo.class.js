@@ -1,80 +1,80 @@
-import { cartModel } from "../../models/carts.model.js";
+import cartSchema from "../../models/carts.model.js";
 import mongoose from 'mongoose';
 
 class CartManager {
     constructor() {
-        const MONGODB_URI = process.env.APPLICATION_MONGODB_URI;
-
-        mongoose.connect(MONGODB_URI, {
+        mongoose.connect("mongodb+srv://luchocella109:UX1ZuKXg9lkjvBGJ@ecommerce.peyqfli.mongodb.net/?retryWrites=true&w=majority", {
             useNewUrlParser: true,
-            useUnifiedTopology: true,
-            useCreateIndex: true,
-            useFindAndModify: false,
+            useUnifiedTopology: true
         });
-
-        this.Cart = mongoose.model("carts", cartModel);
+        this.carts = mongoose.model('carts', cartSchema);
     }
 
     async createCart() {
-        const newCart = new this.Cart({ products: [] });
+        const carts = await this.getCarts();
+        const newCart = new this.carts({ id: await this.generateId(), products: [] });
+        carts.push(newCart);
         await newCart.save();
-        return newCart.toObject();
+        return carts;
     }
 
     async addProduct(cartId, productId) {
         const product = await pM.getProductById(productId);
-        if (!product) {
-            throw new Error(`Product with id ${productId} not found`);
-        }
 
-        const cart = await this.Cart.findById(cartId).populate('products.id').exec();
-        if (!cart) {
-            throw new Error(`Cart with id ${cartId} not found`);
-        }
+        if (!product) { return; }
 
-        const productInCart = cart.products.find(p => p.id._id.equals(productId));
-        if (!productInCart) {
+        const cart = await this.getCartById(cartId);
+
+        const existingProduct = cart.products.find((product) => {
+            return product.id == productId;
+        });
+
+        if (!existingProduct) {
             cart.products.push({ id: productId, quantity: 1 });
         } else {
-            productInCart.quantity++;
+            existingProduct.quantity++;
         }
 
         await cart.save();
-        return cart.toObject();
+        return cart;
     }
 
     async getCartById(cartId) {
-        const cart = await this.Cart.findById(cartId).populate('products.id').exec();
+        const cart = await this.carts.findOne({ id: cartId });
+
         if (!cart) {
-            throw new Error(`Cart with id ${cartId} not found`);
+            throw new Error('Cart not found');
         }
-        return cart.toObject();
+
+        return cart;
     }
 
     async getCarts() {
-        const carts = await this.Cart.find().populate('products.id').exec();
-        return carts.map(cart => cart.toObject());
+        const carts = await this.carts.find().exec();
+        return carts;
+    }
+
+    async generateId() {
+        const carts = await this.getCarts();
+        if (carts.length === 0) {
+            return 0;
+        }
+        const lastCart = carts[carts.length - 1];
+        return lastCart.id + 1;
     }
 
     async deleteProductFromCart(cartId, productId) {
-        const cart = await this.Cart.findById(cartId).populate('products.id').exec();
-        if (!cart) {
-            throw new Error(`Cart with id ${cartId} not found`);
-        }
+        const cart = await this.getCartById(cartId);
+        const index = cart.products.findIndex(product => product.id === productId);
 
-        const productInCart = cart.products.find(p => p.id._id.equals(productId));
-        if (!productInCart) {
-            throw new Error(`Product with id ${productId} not found in cart with id ${cartId}`);
-        }
-
-        if (productInCart.quantity === 1) {
-            cart.products.pull(productInCart);
+        if (index !== -1) {
+            cart.products.splice(index, 1);
+            await cart.save();
         } else {
-            productInCart.quantity--;
+            throw new Error('Product not found');
         }
 
-        await cart.save();
-        return cart.toObject();
+        return cart;
     }
 }
 

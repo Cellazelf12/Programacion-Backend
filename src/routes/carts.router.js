@@ -2,7 +2,6 @@ import { Router } from "express";
 import CartManager from "../DAOs/classes/mongo/CartManagerMongo.class.js";
 
 const router = Router();
-import __dirName from "../utils.js";
 const cM = new CartManager();
 
 function getLimitedArray(array, count) {

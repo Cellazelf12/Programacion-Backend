@@ -1,21 +1,20 @@
-import { productsModel } from "../../models/products.model.js";
+import productSchema from "../../models/products.model.js";
 import mongoose from 'mongoose';
 
 class ProductManager {
     constructor() {
-        const MONGODB_URI = process.env.APPLICATION_MONGODB_URI;
+        const MONGODB_URI = "mongodb+srv://luchocella109:UX1ZuKXg9lkjvBGJ@ecommerce.peyqfli.mongodb.net/?retryWrites=true&w=majority";
         mongoose.connect(MONGODB_URI, {
             useNewUrlParser: true,
-            useUnifiedTopology: true,
-            useCreateIndex: true,
-            useFindAndModify: false,
+            useUnifiedTopology: true
         });
 
-        this.products = mongoose.model('products', productsModel);
+        this.products = mongoose.model('products', productSchema);
     }
 
     async addProduct(product) {
-        const newProduct = new this.products(product);
+        const paramProduct = { id: await this.generateId(), ...product }
+        const newProduct = new this.products(paramProduct);
         await newProduct.save();
         return newProduct.toObject();
     }
@@ -29,7 +28,7 @@ class ProductManager {
     }
 
     async getProductById(id) {
-        const product = await this.products.findById(id).exec();
+        const product = await this.products.findOne({ id }).exec();
         if (!product) {
             throw new Error('Product not found');
         }
@@ -47,15 +46,24 @@ class ProductManager {
     }
 
     async deleteProduct(id) {
-        const result = await this.products.deleteOne({ _id: id }).exec();
+        const result = await this.products.deleteOne({ id: id }).exec();
         if (result.deletedCount === 0) {
             throw new Error('Product not found');
         }
     }
 
+    async generateId() {
+        const products = await this.getProducts();
+        if (products.length === 0) {
+            return 0;
+        }
+        const lastProduct = products[products.length - 1];
+        return lastProduct.id + 1;
+    }
+
     async updateProduct(id, toUpdate) {
-        const product = await this.products.findByIdAndUpdate(
-            id,
+        const product = await this.products.findOneAndUpdate(
+            { id: id },
             toUpdate,
             { new: true },
         ).exec();
