@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 
 class ProductManager {
     constructor() {
-        const MONGODB_URI = "mongodb+srv://luchocella109:UX1ZuKXg9lkjvBGJ@ecommerce.peyqfli.mongodb.net/?retryWrites=true&w=majority";
+        const MONGODB_URI = process.env.APPLICATION_MONGODB_URI;
         mongoose.connect(MONGODB_URI, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
