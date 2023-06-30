@@ -6,7 +6,8 @@ class ProductManager {
         const MONGODB_URI = "mongodb+srv://luchocella109:UX1ZuKXg9lkjvBGJ@ecommerce.peyqfli.mongodb.net/?retryWrites=true&w=majority";
         mongoose.connect(MONGODB_URI, {
             useNewUrlParser: true,
-            useUnifiedTopology: true
+            useUnifiedTopology: true,
+
         });
 
         this.products = mongoose.model('products', productSchema);
@@ -35,9 +36,24 @@ class ProductManager {
         return product.toObject();
     }
 
-    async getProducts() {
-        const products = await this.products.find().exec();
-        return products.map(product => product.toObject());
+    async getProducts(limit, page, sort, filter, filterVal) {
+        try {
+            let filterOptions = {};
+            if (filter && filterVal) {
+                filterOptions = { [filter]: filterVal };
+            }
+
+            const paginationOptions = { limit, page, lean: true };
+            if (sort === 1 || sort === -1) {
+                paginationOptions.sort = { price: sort };
+            }
+
+            const result = await this.products.paginate(filterOptions, paginationOptions);
+            return result;
+        } catch (error) {
+            console.error(error);
+            return error;
+        }
     }
 
     async getProductsInStock() {
