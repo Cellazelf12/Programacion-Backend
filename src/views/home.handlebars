@@ -1,24 +1,29 @@
-<div class="container">
-  <table class="table">
-    <thead>
-      <tr>
-        <th>Nombre</th>
-        <th>Descripción</th>
-        <th>Precio</th>
-        <th>Categoría</th>
-        <th>Unidades Disponibles</th>
-      </tr>
-    </thead>
-    <tbody>
-      {{#each products}}
-        <tr>
-          <td>{{title}}</td>
-          <td>{{description}}</td>
-          <td>${{price}}</td>
-          <td>{{category}}</td>
-          <td>{{stock}} unidades</td>
-        </tr>
-      {{/each}}
-    </tbody>
-  </table>
-</div>
+{{#if isValid}}
+  <div>
+    {{#each docs}}
+      <div>
+        <p>{{title}}</p>
+        <p>Descripcion: {{description}}</p>
+        <p>Precio: ${{price}}</p>
+        <p>Categoria: {{category}}</p>
+        <img src="{{thumbnail}}" alt="{{description}}" />
+        <p>Stock: {{stock}}</p>
+      </div>
+      <br />
+    {{/each}}
+  </div>
+  <br />
+  <div>
+    {{#if hasPrevPage}}
+      <a href="{{prevLink}}">Anterior</a>
+    {{/if}}
+
+    {{page}}
+
+    {{#if hasNextPage}}
+      <a href="{{nextLink}}">Siguiente</a>
+    {{/if}}
+  </div>
+{{else}}
+  <h1>No hay productos para mostrar</h1>
+{{/if}}

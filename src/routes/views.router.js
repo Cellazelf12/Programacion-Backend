@@ -2,9 +2,16 @@ import { Router } from "express";
 const router = Router();
 
 router.get('/', async (req, res) => {
-    await req.pM.getProductsInStock().then((products) => {
-        res.render('home', { style: "home.css", title: "Productos", products })
-    });
+
+    let page = Number(req.query.page) || 1;
+
+    let products = await req.pM.products.paginate({}, { page, limit: 5, lean: true });
+
+    products.prevLink = products.hasPrevPage ? `http://localhost:8080/?page=${products.prevPage}` : '';
+    products.nextLink = products.hasNextPage ? `http://localhost:8080/?page=${products.nextPage}` : '';
+    products.isValid = true;
+    res.render('home', products);
+
 });
 
 router.get('/realtimeproducts', async (req, res) => {

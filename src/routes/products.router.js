@@ -1,9 +1,7 @@
 import { Router } from "express";
 const router = Router();
 
-function getLimitedArray(array, count) {
-    return array.slice(0, count);
-}
+const baseUrl = 'http://localhost:8080/api/products';
 
 router.get('/:pid', (req, res) => {
     const id = parseInt(req.params.pid);
@@ -23,17 +21,18 @@ router.get('/:pid', (req, res) => {
 
 router.get('/', async (req, res) => {
 
-    await req.pM.getProducts()
-        .then((products) => {
-            const limit = parseInt(req.query.limit);
+    const { limit = 5, page = 1, sort = 0, filter, filterVal } = req.query;
 
-            if (limit && !Number.isInteger(limit)) {
-                res.status(400).json({ err: 'El parámetro limit debe ser un numero mayor a 0 y debe ser un entero.' });
-                return;
-            }
+    console.log(limit, page, sort, filter, filterVal);
 
-            res.send((limit > 0 ? getLimitedArray(products, limit) : products));
-        })
+    const products = await req.pM.getProducts(Number(limit), Number(page), Number(sort), filter, filterVal);
+
+    products.prevLink = products.hasPrevPage ? `${baseUrl}?page=${products.prevPage}` : '';
+    products.nextLink = products.hasNextPage ? `${baseUrl}?page=${products.nextPage}` : '';
+
+    products.isValid = !(page <= 0 || page > products.totalPages);
+
+    res.render('home', products);
 });
 
 router.post("/", async (req, res) => {

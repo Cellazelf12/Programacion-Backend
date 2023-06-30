@@ -13,6 +13,7 @@ const app = express();
 
 let pM = new ProductManager();
 
+
 app.use(express.static(__dirname + '/public'));
 app.use(json());
 app.use(urlencoded({ extended: true }))
@@ -23,6 +24,7 @@ app.set('view engine', 'handlebars');
 app.use(function (req, res, next) {
     req.socketServer = socketServer;
     req.pM = pM;
+    req.mongoose;
     next();
 })
 
