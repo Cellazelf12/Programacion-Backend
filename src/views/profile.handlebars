@@ -1,0 +1,12 @@
+<div>
+  <h1>Tu perfil:</h1>
+  <p>Nombre: {{name}}</p>
+  <p>Email: {{email}}</p>
+  <p>Edad: {{age}}</p>
+  {{#if role}}
+    <p>Rol: {{role}}</p>
+  {{/if}}
+  <a href="/api/sessions/logout"><button>Desconectarse</button></a>
+  <button id="botonAtras">Ir para atrás</button>
+</div>
+<script src="/js/cart.js"></script>

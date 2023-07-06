@@ -22,6 +22,8 @@ router.get('/:pid', (req, res) => {
 router.get('/', async (req, res) => {
 
     const { limit = 5, page = 1, sort = 0, filter, filterVal } = req.query;
+    let user = req.session.user;
+    if (!user) return res.redirect('/')
 
     console.log(limit, page, sort, filter, filterVal);
 

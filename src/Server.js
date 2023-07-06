@@ -5,14 +5,17 @@ import __dirname from "./utils.js";
 import ProductManager from "./DAOs/classes/mongo/ProductManagerMongo.class.js";
 import productRouter from "./routes/products.router.js";
 import cartRouter from "./routes/carts.router.js";
-import viewsRouter from "./routes/views.router.js";
+import routerAuth from './routes/auth.router.js';
+import routerSessions from './routes/sessions.router.js';
 
 import { Server } from "socket.io";
+
+import MongoStore from 'connect-mongo';
+import session from 'express-session';
 
 const app = express();
 
 let pM = new ProductManager();
-
 
 app.use(express.static(__dirname + '/public'));
 app.use(json());
@@ -28,9 +31,22 @@ app.use(function (req, res, next) {
     next();
 })
 
+const MONGODB_URI = "mongodb+srv://luchocella109:UX1ZuKXg9lkjvBGJ@ecommerce.peyqfli.mongodb.net/?retryWrites=true&w=majority";
+
+app.use(session({
+    store: new MongoStore({
+        mongoUrl: MONGODB_URI,
+    }),
+    secret: "mongoSecret",
+    resave: true,
+    saveUninitialized: false,
+}))
+
+
 app.use('/api/products', productRouter);
 app.use('/api/carts', cartRouter);
-app.use('/', viewsRouter);
+app.use('/', routerAuth)
+app.use('/api/sessions', routerSessions)
 
 const expressServer = app.listen(8080, () => {
     console.log('Servidor iniciado en el puerto 8080');
