@@ -12,6 +12,8 @@ import { Server } from "socket.io";
 
 import MongoStore from 'connect-mongo';
 import session from 'express-session';
+import passport from 'passport';
+import { initializePassport } from './config/passport.config.js';
 
 const app = express();
 
@@ -27,7 +29,6 @@ app.set('view engine', 'handlebars');
 app.use(function (req, res, next) {
     req.socketServer = socketServer;
     req.pM = pM;
-    req.mongoose;
     next();
 })
 
@@ -41,6 +42,11 @@ app.use(session({
     resave: true,
     saveUninitialized: false,
 }))
+
+initializePassport();
+
+app.use(passport.initialize())
+app.use(passport.session())
 
 
 app.use('/api/products', productRouter);
